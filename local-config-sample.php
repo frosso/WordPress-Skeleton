@@ -10,3 +10,7 @@ define( 'DB_NAME', 'local_db_name' );
 define( 'DB_USER', 'local_db_user' );
 define( 'DB_PASSWORD', 'local_db_password' );
 define( 'DB_HOST', 'localhost' ); // Probably 'localhost'
+
+ini_set( 'display_errors', 0 );
+define( 'WP_DEBUG', true );
+define( 'WP_DEBUG_DISPLAY', true );

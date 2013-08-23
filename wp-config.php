@@ -1,23 +1,34 @@
 <?php
+
+define('WP_SITEURL', 'http://' . $_SERVER['SERVER_NAME'] . '/wp');
+define('WP_HOME',    'http://' . $_SERVER['SERVER_NAME']);
+
+
 // ===================================================
 // Load database info and local development parameters
 // ===================================================
 if ( file_exists( dirname( __FILE__ ) . '/local-config.php' ) ) {
-	define( 'WP_LOCAL_DEV', true );
-	include( dirname( __FILE__ ) . '/local-config.php' );
+    define( 'WP_LOCAL_DEV', true );
+    include( dirname( __FILE__ ) . '/local-config.php' );
 } else {
-	define( 'WP_LOCAL_DEV', false );
-	define( 'DB_NAME', '%%DB_NAME%%' );
-	define( 'DB_USER', '%%DB_USER%%' );
-	define( 'DB_PASSWORD', '%%DB_PASSWORD%%' );
-	define( 'DB_HOST', '%%DB_HOST%%' ); // Probably 'localhost'
-}
+    define( 'WP_LOCAL_DEV', false );
+    define( 'DB_NAME', 'remediabasewp' );
+    define( 'DB_USER', 'remediabasewp' );
+    define( 'DB_PASSWORD', 'remediabasewp' );
+    define( 'DB_HOST', 'localhost' ); // Probably 'localhost'
+    // ===========
+    // Hide errors
+    // ===========
+    ini_set( 'display_errors', 0 );
+    define( 'WP_DEBUG', false );
+    define( 'WP_DEBUG_DISPLAY', false );
 
-// ========================
-// Custom Content Directory
-// ========================
-define( 'WP_CONTENT_DIR', dirname( __FILE__ ) . '/content' );
-define( 'WP_CONTENT_URL', 'http://' . $_SERVER['HTTP_HOST'] . '/content' );
+    // impediamo di modificare files dall'amministrazione. Ora si usa GIT!
+    define('DISALLOW_FILE_EDIT', true);
+
+    // impediamo di installare temi, plugins etc dall'amministrazione. Ora si usa GIT!
+    define('DISALLOW_FILE_MODS',true);
+}
 
 // ================================================
 // You almost certainly do not want to change these
@@ -50,12 +61,6 @@ $table_prefix  = 'wp_';
 // ================================
 define( 'WPLANG', '' );
 
-// ===========
-// Hide errors
-// ===========
-ini_set( 'display_errors', 0 );
-define( 'WP_DEBUG_DISPLAY', false );
-
 // =================================================================
 // Debug mode
 // Debugging? Enable these. Can also enable them in local-config.php
@@ -66,18 +71,12 @@ define( 'WP_DEBUG_DISPLAY', false );
 // ======================================
 // Load a Memcached config if we have one
 // ======================================
-if ( file_exists( dirname( __FILE__ ) . '/memcached.php' ) )
-	$memcached_servers = include( dirname( __FILE__ ) . '/memcached.php' );
-
-// ===========================================================================================
-// This can be used to programatically set the stage when deploying (e.g. production, staging)
-// ===========================================================================================
-define( 'WP_STAGE', '%%WP_STAGE%%' );
-define( 'STAGING_DOMAIN', '%%WP_STAGING_DOMAIN%%' ); // Does magic in WP Stack to handle staging domain rewriting
+// if ( file_exists( dirname( __FILE__ ) . '/memcached.php' ) )
+    // $memcached_servers = include( dirname( __FILE__ ) . '/memcached.php' );
 
 // ===================
 // Bootstrap WordPress
 // ===================
 if ( !defined( 'ABSPATH' ) )
-	define( 'ABSPATH', dirname( __FILE__ ) . '/wp/' );
+    define( 'ABSPATH', dirname( __FILE__ ) . '/wp/' );
 require_once( ABSPATH . 'wp-settings.php' );
