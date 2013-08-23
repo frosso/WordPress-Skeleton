@@ -4,3 +4,8 @@
 /db-sync
 /content/upgrade/
 .DS_Store
+/.settings
+*.project
+*.log
+/*deployments.log
+/git-deploy.php
