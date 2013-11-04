@@ -18,18 +18,18 @@ final class Frosso_Theme_Fix {
             &$this,
             'body_class'
         ) );
-        add_filter( 'show_admin_bar', '__return_false' );
         add_filter( 'wp_enqueue_scripts', array(
             &$this,
             'enqueue_scripts'
         ), 0 );
-        //add_action('after_setup_theme', array(&$this, 'after_setup_theme'));
     }
 
     function enqueue_scripts( ) {
         // jQuery is loaded using the same method from HTML5 Boilerplate:
-        // Grab Google CDN's latest jQuery with a protocol relative URL; fallback to local if offline
-        // It's kept in the header instead of footer to avoid conflicts with plugins.
+        // Grab Google CDN's latest jQuery with a protocol relative URL; fallback
+        // to local if offline
+        // It's kept in the header instead of footer to avoid conflicts with
+        // plugins.
         if ( !is_admin( ) ) {
             wp_deregister_script( 'jquery' );
             wp_register_script( 'jquery', '//ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js', false, null, true );
@@ -48,8 +48,10 @@ final class Frosso_Theme_Fix {
         if ( $add_jquery_fallback ) {
             // echo '
             // <script>
-            // window.jQuery || document.write(\'<script src="' . get_template_directory_uri() . '/assets/js/vendor/jquery-1.10.1.min.js"><\/script>\')
-            // </script>' . "\n"; //tODO: definire l'url di jQuery
+            // window.jQuery || document.write(\'<script src="' .
+            // get_template_directory_uri() .
+            // '/assets/js/vendor/jquery-1.10.1.min.js"><\/script>\')
+            // </script>' . "\n"; //TODO: definire l'url di jQuery
             $add_jquery_fallback = false;
         }
 
@@ -60,50 +62,11 @@ final class Frosso_Theme_Fix {
         return $src;
     }
 
-    function after_setup_theme( ) {
-        $get_theme_name = explode( '/themes/', get_template_directory( ) );
-        define( 'THEME_NAME', next( $get_theme_name ) );
-        define( 'THEME_PATH', RELATIVE_CONTENT_PATH . '/themes/' . THEME_NAME );
-
-        // Abilito features tema
-        add_theme_support( 'rewrites' );
-        // Enable URL rewrites
-        add_theme_support( 'root-relative-urls' );
-        // Enable relative URLs
-
-        if ( !is_multisite( ) && !is_child_theme( ) ) {
-            if ( current_theme_supports( 'rewrites' ) ) {
-                add_action( 'generate_rewrite_rules', array(
-                    &$this,
-                    'add_rewrites'
-                ) );
-            }
-
-            if ( !is_admin( ) && current_theme_supports( 'rewrites' ) ) {
-                $tags = array(
-                    'plugins_url',
-                    'bloginfo',
-                    'stylesheet_directory_uri',
-                    'template_directory_uri',
-                    'script_loader_src',
-                    'style_loader_src'
-                );
-
-                foreach ( $tags as $tag ) {
-                    add_filter( $tag, array(
-                        &$this,
-                        'clean_urls'
-                    ) );
-                }
-
-            }
-        }
-    }
-
     /**
      * Remove unnecessary dashboard widgets
      *
-     * @link http://www.deluxeblogtips.com/2011/01/remove-dashboard-widgets-in-wordpress.html
+     * @link
+     * http://www.deluxeblogtips.com/2011/01/remove-dashboard-widgets-in-wordpress.html
      */
     function remove_dashboard_widgets( ) {
         remove_meta_box( 'dashboard_incoming_links', 'dashboard', 'normal' );
@@ -191,46 +154,6 @@ final class Frosso_Theme_Fix {
         return $classes;
     }
 
-    function clean_urls( $content ) {
-        if ( strpos( $content, RELATIVE_PLUGIN_PATH ) > 0 ) {
-            return str_replace( '/' . RELATIVE_PLUGIN_PATH, '/plugins', $content );
-        } else {
-            return str_replace( '/' . THEME_PATH, '', $content );
-        }
-    }
-
-    /**
-     * URL rewriting
-     *
-     * Rewrites currently do not happen for child themes (or network installs)
-     * @todo https://github.com/retlehs/roots/issues/461
-     *
-     * Rewrite:
-     *   /wp-content/themes/themename/css/ to /css/
-     *   /wp-content/themes/themename/js/  to /js/
-     *   /wp-content/themes/themename/img/ to /img/
-     *   /wp-content/plugins/              to /plugins/
-     *
-     * If you aren't using Apache, alternate configuration settings can be found in the docs.
-     *
-     * @link https://github.com/retlehs/roots/blob/master/doc/rewrites.md
-     */
-    function add_rewrites( $content ) {
-        global $wp_rewrite;
-        $new_non_wp_rules = array(
-            'assets/css/(.*)' => THEME_PATH . '/assets/css/$1',
-            'assets/js/(.*)' => THEME_PATH . '/assets/js/$1',
-            'assets/img/(.*)' => THEME_PATH . '/assets/img/$1',
-            'plugins/(.*)' => RELATIVE_PLUGIN_PATH . '/$1'
-        );
-        $wp_rewrite->non_wp_rules = array_merge( $wp_rewrite->non_wp_rules, $new_non_wp_rules );
-        return $content;
-    }
-
 }
-
-// Define helper constants
-define( 'RELATIVE_PLUGIN_PATH', str_replace( home_url( ) . '/', '', plugins_url( ) ) );
-define( 'RELATIVE_CONTENT_PATH', str_replace( home_url( ) . '/', '', content_url( ) ) );
 
 new Frosso_Theme_Fix( );
