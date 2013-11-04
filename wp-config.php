@@ -1,34 +1,42 @@
 <?php
 
-define('WP_SITEURL', 'http://' . $_SERVER['SERVER_NAME'] . '/wp');
-define('WP_HOME',    'http://' . $_SERVER['SERVER_NAME']);
-
-
 // ===================================================
 // Load database info and local development parameters
 // ===================================================
-if ( file_exists( dirname( __FILE__ ) . '/local-config.php' ) ) {
+
+include_once dirname( __FILE__ ) . '/get-envinronment.php';
+if ( !defined( 'DEV_ENV' ) ) {
+    die( 'DEV_ENV not defined' );
+}
+
+if ( DEV_ENV == Envinronments::local ) {
     define( 'WP_LOCAL_DEV', true );
-    include( dirname( __FILE__ ) . '/local-config.php' );
-} else {
+    include (dirname( __FILE__ ) . '/local-config.php');
+} elseif ( DEV_ENV == Envinronments::staging ) {
     define( 'WP_LOCAL_DEV', false );
     define( 'DB_NAME', 'remediabasewp' );
     define( 'DB_USER', 'remediabasewp' );
     define( 'DB_PASSWORD', 'remediabasewp' );
-    define( 'DB_HOST', 'localhost' ); // Probably 'localhost'
+    define( 'DB_HOST', 'localhost' );
+    // Probably 'localhost'
     // ===========
     // Hide errors
     // ===========
-    ini_set( 'display_errors', 0 );
     define( 'WP_DEBUG', false );
     define( 'WP_DEBUG_DISPLAY', false );
 
-    // impediamo di modificare files dall'amministrazione. Ora si usa GIT!
-    define('DISALLOW_FILE_EDIT', true);
-
-    // impediamo di installare temi, plugins etc dall'amministrazione. Ora si usa GIT!
-    define('DISALLOW_FILE_MODS',true);
+    /**
+     * Dove mettiamo Wordpress? (in produzione/staging probabilmente si trova nella root del sito)
+     */
+    define( 'WP_SITEURL', 'http://' . $_SERVER['SERVER_NAME'] . '/wp' );
+    define( 'WP_HOME', 'http://' . $_SERVER['SERVER_NAME'] );
+    // ========================
+    // Custom Content Directory
+    // ========================
+    define( 'WP_CONTENT_DIR', dirname( __FILE__ ) . '/content' );
+    define( 'WP_CONTENT_URL', 'http://' . $_SERVER['SERVER_NAME'] . '/content' );
 }
+
 
 // ================================================
 // You almost certainly do not want to change these
