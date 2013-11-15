@@ -9,10 +9,10 @@ if ( !defined( 'DEV_ENV' ) ) {
     die( 'DEV_ENV not defined' );
 }
 
-if ( DEV_ENV == Envinronments::local ) {
+if ( Envinronments::get_current_env( ) == Envinronments::local ) {
     define( 'WP_LOCAL_DEV', true );
     include (dirname( __FILE__ ) . '/local-config.php');
-} elseif ( DEV_ENV == Envinronments::staging ) {
+} elseif ( Envinronments::get_current_env( ) == Envinronments::staging ) {
     define( 'WP_LOCAL_DEV', false );
     define( 'DB_NAME', 'remediabasewp' );
     define( 'DB_USER', 'remediabasewp' );
@@ -26,7 +26,8 @@ if ( DEV_ENV == Envinronments::local ) {
     define( 'WP_DEBUG_DISPLAY', false );
 
     /**
-     * Dove mettiamo Wordpress? (in produzione/staging probabilmente si trova nella root del sito)
+     * Dove mettiamo Wordpress? (in produzione/staging probabilmente si trova
+     * nella root del sito)
      */
     define( 'WP_SITEURL', 'http://' . $_SERVER['SERVER_NAME'] . '/wp' );
     define( 'WP_HOME', 'http://' . $_SERVER['SERVER_NAME'] );
@@ -36,7 +37,6 @@ if ( DEV_ENV == Envinronments::local ) {
     define( 'WP_CONTENT_DIR', dirname( __FILE__ ) . '/content' );
     define( 'WP_CONTENT_URL', 'http://' . $_SERVER['SERVER_NAME'] . '/content' );
 }
-
 
 // ================================================
 // You almost certainly do not want to change these
@@ -48,20 +48,20 @@ define( 'DB_COLLATE', '' );
 // Salts, for security
 // Grab these from: https://api.wordpress.org/secret-key/1.1/salt
 // ==============================================================
-define( 'AUTH_KEY',         'put your unique phrase here' );
-define( 'SECURE_AUTH_KEY',  'put your unique phrase here' );
-define( 'LOGGED_IN_KEY',    'put your unique phrase here' );
-define( 'NONCE_KEY',        'put your unique phrase here' );
-define( 'AUTH_SALT',        'put your unique phrase here' );
+define( 'AUTH_KEY', 'put your unique phrase here' );
+define( 'SECURE_AUTH_KEY', 'put your unique phrase here' );
+define( 'LOGGED_IN_KEY', 'put your unique phrase here' );
+define( 'NONCE_KEY', 'put your unique phrase here' );
+define( 'AUTH_SALT', 'put your unique phrase here' );
 define( 'SECURE_AUTH_SALT', 'put your unique phrase here' );
-define( 'LOGGED_IN_SALT',   'put your unique phrase here' );
-define( 'NONCE_SALT',       'put your unique phrase here' );
+define( 'LOGGED_IN_SALT', 'put your unique phrase here' );
+define( 'NONCE_SALT', 'put your unique phrase here' );
 
 // ==============================================================
 // Table prefix
 // Change this if you have multiple installs in the same database
 // ==============================================================
-$table_prefix  = 'wp_';
+$table_prefix = 'wp_';
 
 // ================================
 // Language
@@ -80,11 +80,11 @@ define( 'WPLANG', '' );
 // Load a Memcached config if we have one
 // ======================================
 // if ( file_exists( dirname( __FILE__ ) . '/memcached.php' ) )
-    // $memcached_servers = include( dirname( __FILE__ ) . '/memcached.php' );
+// $memcached_servers = include( dirname( __FILE__ ) . '/memcached.php' );
 
 // ===================
 // Bootstrap WordPress
 // ===================
 if ( !defined( 'ABSPATH' ) )
     define( 'ABSPATH', dirname( __FILE__ ) . '/wp/' );
-require_once( ABSPATH . 'wp-settings.php' );
+require_once (ABSPATH . 'wp-settings.php');
